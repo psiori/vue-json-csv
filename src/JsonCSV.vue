@@ -84,6 +84,14 @@ export default {
     testing: {
       required: false,
       default: false
+    },
+    /**
+     * Use this flag to omit the default save-as-dialog and
+     * to emit the blob to the parent component
+     */
+    exportBlob: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -196,13 +204,17 @@ export default {
       if (this.encoding === "utf-8") {
         csv = "\ufeff" + csv;
       }
-      this.$emit("export-finished");
       if (!this.testing) {
         let blob = new Blob([csv], {
           type: "application/csvcharset=" + this.encoding
         });
-        saveAs(blob, this.name);
+        if (this.exportBlob) {
+          this.$emit("export-blob", blob);
+        } else {
+          saveAs(blob, this.name);
+        }
       }
+      this.$emit("export-finished");
     }
   }
 };
