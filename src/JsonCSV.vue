@@ -87,7 +87,8 @@ export default {
     },
     /**
      * Use this flag to omit the default save-as-dialog and
-     * to emit the blob to the parent component
+     * to emit the blob to the parent component. Format:
+     * $event : { blob: <blob>, filename: <string> }
      */
     exportBlob: {
       type: Boolean,
@@ -209,7 +210,7 @@ export default {
           type: "application/csvcharset=" + this.encoding
         });
         if (this.exportBlob) {
-          this.$emit("export-blob", blob);
+          this.$emit("export-blob", { blob: blob, filename: this.name });
         } else {
           saveAs(blob, this.name);
         }
